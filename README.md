@@ -21,6 +21,8 @@ pip install setuptools_rust
 From github:
 ```bash
 git clone https://github.com/rexlunae/cargo-pyinit.git
+cd cargo-pyinit
+cargo install --path .
 ```
 
 From cargo:
