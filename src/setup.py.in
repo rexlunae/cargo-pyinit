@@ -2,7 +2,7 @@ from setuptools import setup
 from setuptools_rust import Binding, RustExtension
 
 setup(
-    name="{module_name}",
+    name="{package_name}",
     version="0.1",
     rust_extensions=[RustExtension("{module_name}.{module_name}", binding=Binding.PyO3)],
     packages=["{module_name}"],
