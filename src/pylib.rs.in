@@ -1,0 +1,12 @@
+use pyo3::prelude::*;
+
+mod {rs_lib_mod};
+pub use {rs_lib_mod}::*;
+
+/// Defines python module {module_name}
+#[pymodule]
+fn {module_name}(py: Python, m: &PyModule) -> PyResult<()> \{
+
+    Ok(())
+}
+

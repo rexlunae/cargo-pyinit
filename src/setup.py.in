@@ -1,0 +1,11 @@
+from setuptools import setup
+from setuptools_rust import Binding, RustExtension
+
+setup(
+    name="{module_name}",
+    version="0.1",
+    rust_extensions=[RustExtension("{module_name}.{module_name}", binding=Binding.PyO3)],
+    packages=["{module_name}"],
+    # rust extensions are not zip safe, just like C-extensions.
+    zip_safe=False,
+)
