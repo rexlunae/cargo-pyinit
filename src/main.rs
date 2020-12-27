@@ -105,6 +105,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let lib_path_parts = re.captures(&lib_rs_path).unwrap();
     let pylib_rs_path = format!("{}{}{}", &lib_path_parts[1], "pylib", &lib_path_parts[3]);   // Replace the name of the library file with pylib
     let rs_lib_mod = format!("{}", &lib_path_parts[2]);
+    assert!(rs_lib_mod != "pylib");
 
     info!("Setting the library to start at {}", pylib_rs_path);
     // Change the path for the library.
