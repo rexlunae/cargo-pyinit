@@ -22,11 +22,13 @@ use regex::Regex;
 static PYLIB_RS_IN: &'static str = include_str!("pylib.rs.in");
 static SETUP_PY_IN: &'static str = include_str!("setup.py.in");
 static MANIFEST_IN: &'static str = include_str!("MANIFEST.in");
+static INIT_PY: &'static str = include_str!("__init__.py.in");
 
 #[derive(Serialize)]
 struct Context {
     module_name: String,
     rs_lib_mod: String,
+    package_name: String,
 }
 
 
@@ -120,12 +122,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     tt.add_template("pylib.rs", PYLIB_RS_IN)?;
     tt.add_template("setup.py", SETUP_PY_IN)?;
     tt.add_template("MANIFEST.in", MANIFEST_IN)?;
+    tt.add_template("__init__.py", INIT_PY)?;
 
 
     let package_name = manifest.package.clone().unwrap().name.clone();
     let module_name = package_name.replace("-", "_");
 
-    let context = Context{ module_name: module_name.clone(), rs_lib_mod: rs_lib_mod };
+    let context = Context{ module_name: module_name.clone(), rs_lib_mod: rs_lib_mod, package_name: package_name };
 
     // Render the pylib.rs
     let pylib_rs = tt.render("pylib.rs", &context)?;
@@ -151,7 +154,9 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Create the Python module and directory.
     create_dir(format!("{}{}{}", path, MAIN_SEPARATOR, module_name.clone()))?;
-    let _init_file =  File::create(format!("{}{}{}{}{}", path, MAIN_SEPARATOR, module_name, MAIN_SEPARATOR, "__init__.py"))?;
+    let mut init_file =  File::create(format!("{}{}{}{}{}", path, MAIN_SEPARATOR, module_name, MAIN_SEPARATOR, "__init__.py"))?;
+    let init_str = tt.render("__init__.py", &context)?;
+    init_file.write_all(init_str.as_bytes())?;
     
     Ok(())
 }
