@@ -7,7 +7,7 @@ use std::{
     result::Result,
     str::from_utf8,
     error::Error,
-    fs::File,
+    fs::{File, create_dir},
     io::prelude::*,
 };
 
@@ -124,7 +124,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let package_name = manifest.package.clone().unwrap().name.clone();
     let module_name = package_name.replace("-", "_");
 
-    let context = Context{ module_name: module_name, rs_lib_mod: rs_lib_mod };
+    let context = Context{ module_name: module_name.clone(), rs_lib_mod: rs_lib_mod };
 
     // Render the pylib.rs
     let pylib_rs = tt.render("pylib.rs", &context)?;
@@ -147,6 +147,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     //let toml = toml::to_string(&manifest).unwrap();
     let mut cargo_file =  File::create(format!("{}{}{}", path, MAIN_SEPARATOR, "Cargo.toml"))?;
     cargo_file.write_all(toml_str.as_bytes())?;
+
+    // Create the Python module and directory.
+    create_dir(format!("{}{}{}", path, MAIN_SEPARATOR, module_name.clone()))?;
+    let _init_file =  File::create(format!("{}{}{}{}{}", path, MAIN_SEPARATOR, module_name, MAIN_SEPARATOR, "__init__.py"))?;
     
     Ok(())
 }
