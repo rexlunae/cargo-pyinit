@@ -11,7 +11,7 @@ use std::{
     io::prelude::*,
 };
 
-use log::info;
+use log::{info, debug, trace};
 use simple_logger::SimpleLogger;
 use cargo_toml::{Manifest, Dependency, DependencyDetail};
 use std::process::{Command, Stdio};
@@ -37,16 +37,27 @@ fn main() -> Result<(), Box<dyn Error>> {
         .version("0.0.1")
         .about("cargo extension to create Python extensions.")
         .arg(
-            Arg::with_name("path")
+            Arg::with_name("cargo-path")
                 .index(1)
+                //.about("The path to initialize.  If not specified, '.' will be inferred.")
+                .required(false)
+                .default_value(".")
+        )
+        .arg(
+            Arg::with_name("path")
+                .index(2)
                 //.about("The path to initialize.  If not specified, '.' will be inferred.")
                 .required(false)
                 .default_value(".")
         )
         .get_matches();
 
-    let path = matches.value_of("path").unwrap();
-    println!("{}", path);
+    // Running under cargo messes with the parameter order, so we have to handle it differently.s
+    let mut path = matches.value_of("cargo-path").unwrap();
+    if path == "pyinit" {
+        path = matches.value_of("path").unwrap();
+    }
+    trace!("Manifest file contents: {}", path);
 
     let cargo_toml_path_str = format!("{}{}Cargo.toml", path, MAIN_SEPARATOR);
     let cargo_toml_path = Path::new(cargo_toml_path_str.as_str());
@@ -65,9 +76,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     info!("Reading TOML file.");
 
     let mut manifest = Manifest::from_path(cargo_toml_path).unwrap();
-    println!("{:#?}", manifest);
     
-    //println!("{}", package_name);
 
     // Add the PyO3 dependency to the Cargo.toml
     let default_dependency_block = Dependency::Detailed(DependencyDetail {
@@ -86,8 +95,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     });
 
     // If PyO3 is already declared, we don't do anything to it, otherwise insert the default settings for it.
+    info!("Adding pyo3 dependency");
     let _dep = manifest.dependencies.entry(String::from("pyo3")).or_insert(default_dependency_block);
-    println!("{:#?}", manifest);
+    debug!("{:#?}", manifest);
 
     // Get the name of the current library path (default src/lib.rs).  We want to replace this with our Pythonized lib.
     let re = Regex::new(r"^(.*/)(.*)(.rs)$").unwrap();
@@ -96,6 +106,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let pylib_rs_path = format!("{}{}{}", &lib_path_parts[1], "pylib", &lib_path_parts[3]);   // Replace the name of the library file with pylib
     let rs_lib_mod = format!("{}", &lib_path_parts[2]);
 
+    info!("Setting the library to start at {}", pylib_rs_path);
     // Change the path for the library.
     let mut new_lib = manifest.lib.clone().unwrap();
     new_lib.path = Some(pylib_rs_path.clone());
@@ -134,7 +145,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     let toml = toml::Value::try_from(manifest).unwrap();
     let toml_str = format!("{}", toml);
     //let toml = toml::to_string(&manifest).unwrap();
-    println!("{}", toml);
     let mut cargo_file =  File::create(format!("{}{}{}", path, MAIN_SEPARATOR, "Cargo.toml"))?;
     cargo_file.write_all(toml_str.as_bytes())?;
     
