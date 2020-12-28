@@ -114,8 +114,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut new_lib = manifest.lib.clone().unwrap();
     new_lib.path = Some(pylib_rs_path.clone());
 
-    // Set the library type.    
-    new_lib.crate_type = vec![String::from("cdylib")];
+    // Set the library types.  cdylib allows it to be used with Python, and lib allows it to be used in Rust.
+    new_lib.crate_type = vec![String::from("cdylib"), String::from("lib")];
     manifest.lib = Some(new_lib);
 
     let mut tt = TinyTemplate::new();
