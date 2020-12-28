@@ -42,6 +42,7 @@ pyinit can only be used to create or modify a library crate.
 
 From inside a source directory:
 ```bash
+cd my-create-directory
 cargo pyinit
 ```
 
@@ -54,7 +55,7 @@ cargo pyinit crate-name
 
 This will create the directory with the given name, if needed, and either create a new crate or modify an existing crate.
 
-Unlike the example code for PyO3, pyinit creates a new file (pylib.rs) that becomes the base of the library, which imports everything from the old lib.rs (or whatever it was previously called).  This separates the Python interface definition somewhat, but it also means that some items that are only allowed at the top level of the crate such as feature flags be moved manually.
+Unlike the example code for PyO3, pyinit creates a new file (pylib.rs) that becomes the base of the library, which imports everything from the old lib.rs (or whatever it was previously called).  This separates the Python interface definition somewhat, but it also means that some items that are only allowed at the top level of the crate such as feature flags be moved manually.  When creating a new crate, the result will work out of the box with either `cargo build` or the Python setup tools, however, if you are modifying an existing crate, you will probably have to spend some time manually moving things into the pylib.rs from your lib.rs.
 
-The resulting hybrid crate has a setup.py, which can be installed in Python with either `python setup.py develop` for a development version, or `python setup.py install` for release.
+The resulting hybrid crate has a setup.py, which can be installed in Python with either `python setup.py develop` for a development version, or `python setup.py install` for release.  You can also use `pip install .`
 
