@@ -9,11 +9,17 @@ You will need:
 
 * Python 3 (https://www.python.org/)
 * setuptools_rust (https://github.com/PyO3/setuptools-rust#pyprojecttoml)
+* The Python toml library.
 
 setuptools_rust can be installed with pip:
 
 ```bash
 pip install setuptools_rust
+```
+
+And toml can be installed like this:
+```bash
+pip install toml
 ```
 
 ## Installation
