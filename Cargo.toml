@@ -3,7 +3,8 @@ name = "cargo-pyinit"
 version = "0.1.0"
 authors = ["Rex Lunae <rexlunae@gmail.com>"]
 edition = "2018"
-
+description = "A cargo plugin to make it easier to write and convert crates into Python extension modules."
+license = "MIT OR Apache-2.0"
 
 [dependencies]
 cargo_toml = "0.8"
