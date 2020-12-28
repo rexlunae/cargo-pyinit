@@ -8,6 +8,7 @@ license = "MIT OR Apache-2.0"
 homepage = "https://github.com/rexlunae/cargo-pyinit"
 repository = "https://github.com/rexlunae/cargo-pyinit.git"
 keywords = ["rust", "cargo", "python"]
+readme = "README.md"
 
 [dependencies]
 cargo_toml = "0.8"
