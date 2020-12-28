@@ -7,6 +7,7 @@ description = "A cargo plugin to make it easier to write and convert crates into
 license = "MIT OR Apache-2.0"
 homepage = "https://github.com/rexlunae/cargo-pyinit"
 repository = "https://github.com/rexlunae/cargo-pyinit.git"
+keywords = ["rust", "cargo", "python"]
 
 [dependencies]
 cargo_toml = "0.8"
