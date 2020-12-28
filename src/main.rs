@@ -146,9 +146,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     manifest_file.write_all(manifest_in.as_bytes())?;
 
     // Update the Cargo.toml
-    let toml = toml::Value::try_from(manifest).unwrap();
+    let toml = cargo_toml::Value::try_from(manifest).unwrap();
     let toml_str = format!("{}", toml);
-    //let toml = toml::to_string(&manifest).unwrap();
     let mut cargo_file =  File::create(format!("{}{}{}", path, MAIN_SEPARATOR, "Cargo.toml"))?;
     cargo_file.write_all(toml_str.as_bytes())?;
 
