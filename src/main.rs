@@ -82,7 +82,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     // Add the PyO3 dependency to the Cargo.toml
     let default_dependency_block = Dependency::Detailed(DependencyDetail {
-        version: Some(String::from("0.13")),
+        version: Some(String::from("0.14")),
         registry: None,
         registry_index: None,
         path: None,
@@ -115,7 +115,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     new_lib.path = Some(pylib_rs_path.clone());
 
     // Set the library types.  cdylib allows it to be used with Python, and lib allows it to be used in Rust.
-    new_lib.crate_type = vec![String::from("cdylib"), String::from("lib")];
+    new_lib.crate_type =Some(vec![String::from("cdylib"), String::from("lib")]);
     manifest.lib = Some(new_lib);
 
     let mut tt = TinyTemplate::new();
